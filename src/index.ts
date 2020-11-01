@@ -6,3 +6,4 @@ export const client = new Discord.Client();
 client.login(config.token);
 
 new RoleAssignmentBot()
+
