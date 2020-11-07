@@ -1,4 +1,4 @@
 export enum Quest {
-    SUCCESS = 'Succès',
-    FAIL = 'Echec'
+  SUCCESS = 'Succès',
+  FAIL = 'Echec',
 }
