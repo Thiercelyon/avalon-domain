@@ -1,4 +1,4 @@
-import {GameState} from "../src/state/game-state"
+import {GameState} from '../src/state/game-state'
 
 test('1 + 1 should be equal to 2', () => {
     let gameState = new GameState()

@@ -1,7 +1,7 @@
-import {Message, TextChannel, User} from 'discord.js';
-import {Quest} from '../domain/quest';
-import {Role} from '../domain/roles';
-import {client} from '../index';
+import {Message, TextChannel, User} from 'discord.js'
+import {Quest} from '../domain/quest'
+import {Role} from '../domain/roles'
+import {client} from '../index'
 
 const roles: Role[] = [
     Role.SIMPLE_VASSAL,
@@ -35,10 +35,10 @@ export default class RoleAssignmentBot {
 
     constructor() {
         client.on('message', (message: Message) => {
-            console.log("received message")
-            if (message.content.startsWith("!") && !message.author.bot) {
+            console.log('received message')
+            if (message.content.startsWith('!') && !message.author.bot) {
                 try {
-                    const [command, ...args] = message.content.substring(1).split(" ")
+                    const [command, ...args] = message.content.substring(1).split(' ')
                     if (!!this.COMMANDS.get(command))
                         this.COMMANDS.get(command).callback(message, ...args)
                     else
@@ -48,7 +48,7 @@ export default class RoleAssignmentBot {
                     message.channel.send(error.message)
                 }
             }
-        });
+        })
     }
 
     init = ({channel}: Message) => {
@@ -158,91 +158,91 @@ export default class RoleAssignmentBot {
     help = (channel: TextChannel, command: string) => !!this.COMMANDS.get(command) ?
         channel.send(`${this.COMMANDS.get(command).doc}\n${this.COMMANDS.get(command).help || ''}`)
         :
-        channel.send(`I don't know this command : "${command}"`)
+        channel.send(`I don't know this command : '${command}'`)
 
     COMMANDS = new Map<string, {callback: (...args: any[]) => void, doc: string, help?: string}>([
         [
             'assign',
             {
                 callback: this.assign,
-                doc: ""
+                doc: ''
             }
         ],
         [
             'init',
             {
                 callback: this.init,
-                doc: ""
+                doc: ''
             }
         ],
         [
             'cheat',
             {
                 callback: this.cheat,
-                doc: ""
+                doc: ''
             }
         ],
         [
             'initQuest',
             {
                 callback: this.initQuest,
-                doc: ""
+                doc: ''
             }
         ],
         [
             'quest',
             {
                 callback: this.achieveQuest,
-                doc: ""
+                doc: ''
             }
         ],
         [
             'night',
             {
                 callback: this.night_phase,
-                doc: ""
+                doc: ''
             }
         ],
         [
             'perceval',
             {
                 callback: this.perceval,
-                doc: ""
+                doc: ''
             }
         ],
         [
             'lancelot_g',
             {
                 callback: this.lancelot_g,
-                doc: ""
+                doc: ''
             }
         ],
         [
             'lancelot_m',
             {
                 callback: this.lancelot_m,
-                doc: ""
+                doc: ''
             }
         ],
         [
             'perceval',
             {
                 callback: this.perceval,
-                doc: ""
+                doc: ''
             }
         ],
         [
             'merlin',
             {
                 callback: this.merlin,
-                doc: ""
+                doc: ''
             }
         ],
         [
             'mechants',
             {
                 callback: this.merlin,
-                doc: ""
+                doc: ''
             }
         ],
         ['help', {
@@ -257,14 +257,14 @@ export default class RoleAssignmentBot {
  * @param {Array} a items An array containing the items.
  */
     private shuffle = (a) => {
-        var j, x, i;
+        var j, x, i
         for (i = a.length - 1; i > 0; i--) {
-            j = Math.floor(Math.random() * (i + 1));
-            x = a[i];
-            a[i] = a[j];
-            a[j] = x;
+            j = Math.floor(Math.random() * (i + 1))
+            x = a[i]
+            a[i] = a[j]
+            a[j] = x
         }
-        return a;
+        return a
     }
 
 }
