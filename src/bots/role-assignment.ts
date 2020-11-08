@@ -74,7 +74,7 @@ export default class RoleAssignmentBot {
         if (this.roles.length === 0)
             channel.send("Désolé, plus aucun rôle n'est disponible :-(")
         console.log({author})
-        channel.send(`Je t'envoie ton rôle en MP ${author}`)
+        channel.send(`Je t'envoie ton rôle en MP ${author.toString()}`)
         const role = this.roles.pop()
         author.send(`Pour cette partie, tu seras : ${role} !`)
         this.players.get(role).push(author)
@@ -148,11 +148,12 @@ export default class RoleAssignmentBot {
                 ]}`
             )
 
-    initQuest = ({channel}: Message, membersCount: number) => {
-        channel.send(`Un équipage de **${membersCount} aventuriers** part en quête !
+    initQuest = ({channel}: Message, ...players: User[]) => {
+        channel.send(`J'ai reçu un équipage comprenant : ${players.join(' | ')}`)
+        channel.send(`Un équipage de **${players.length} aventuriers** part en quête !
             Aventuriers ! Envoyez moi un **UNIQUE** MP avec la commande **!quest <SUCCESS|FAIL>** pour contribuer à sa réussite... Ou son échec...`)
         this.quest = []
-        this.questMembersCount = membersCount
+        this.questMembersCount = players.length
     }
 
     achieveQuest = (message: Message, quest: Quest) => {
