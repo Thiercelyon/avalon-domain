@@ -1,4 +1,5 @@
 import {Message, TextChannel, User} from 'discord.js'
+import * as _ from 'lodash'
 import {Quest} from '../domain/quest'
 import {Role} from '../domain/roles'
 import {client} from '../index'
@@ -29,12 +30,11 @@ export default class RoleAssignmentBot {
     ])
     private roles: Role[] = []
     private quest: Quest[] = []
-    private questMembersCount = 0
+    private questMembers: User[] = []
     private mainChannel: TextChannel
 
     constructor() {
         client.on('message', (message: Message) => {
-            console.log('received message')
             if (message.content.startsWith('!') && !message.author.bot) {
                 try {
                     const [command, ...args] = message.content.substring(1).split(' ')
@@ -64,9 +64,7 @@ export default class RoleAssignmentBot {
         ])
         roles.forEach(r => this.roles.push(r))
         this.shuffle(this.roles)
-        channel.send(`Initialisation d'une nouvelle session avec ces rôles : [${roles.join(
-            ' | '
-        )}]
+        channel.send(`Initialisation d'une nouvelle session avec ces rôles : [${roles.join(' | ')}]
         Lancez chacun votre tour **ET UNE SEULE FOIS** la commande **!assign** pour obtenir votre rôle.`)
     }
 
@@ -148,28 +146,40 @@ export default class RoleAssignmentBot {
                 ]}`
             )
 
-    initQuest = ({channel}: Message, ...players: User[]) => {
-        channel.send(`J'ai reçu un équipage comprenant : ${players.join(' | ')}`)
+    initQuest = ({channel}: Message, ...playerIds: string[]) => {
+        if(_.uniq(playerIds).length !== playerIds.length)
+            throw Error('ERREUR: Chaque joueur ne peut être présent qu\'une fois dans la quête !')
+        let players: User[] = playerIds
+            .map((playerId: string) => {
+                if (!playerId.startsWith('<@!')) {
+                    throw Error('ERREUR: Il ne faut me donner que des joueurs valides, dont le nom doit être en surbrillance en bleu (sélectionnés par autocomplétion et touche ENTREE).')
+                }
+                return this.mainChannel.members.get(playerId.slice(3, playerId.length - 1)).user
+            })
         channel.send(`Un équipage de **${players.length} aventuriers** part en quête !
+            Il est composé de **${players.join(' | ')}** !
             Aventuriers ! Envoyez moi un **UNIQUE** MP avec la commande **!quest <SUCCESS|FAIL>** pour contribuer à sa réussite... Ou son échec...`)
         this.quest = []
-        this.questMembersCount = players.length
+        this.questMembers = players
     }
 
-    achieveQuest = (message: Message, quest: Quest) => {
+    achieveQuest = ({author}: Message, quest: Quest) => {
+        if (!Object.keys(Quest).includes(quest)) {
+            throw Error('Merci de ne m\'envoyer que des valeurs valides: `!quest SUCCESS` ou `!quest FAIL`')
+        }
         this.quest.push(quest)
-        --this.questMembersCount
-        if (this.questMembersCount > 0)
+        _.remove(this.questMembers, member => {
+            return member.id === author.id
+        })
+        if (this.questMembers.length > 0)
             this.mainChannel.send(
-                `Il nous manque encore ${this.questMembersCount} vote(s).`
+                `Il nous manque encore ${this.questMembers.length} vote(s) (${this.questMembers.join(' | ')}).`
             )
-        else if (this.questMembersCount === 0) {
+        else if (this.questMembers.length === 0) {
             this.mainChannel.send(`La quête est terminée !
             ${this.shuffle(this.quest).join(' | ')}`)
         } else {
-            this.mainChannel.send(
-                "Mais virez moi ce clampin qui continue à voter alors que c'est fini !"
-            )
+            this.mainChannel.send('Mais virez moi ce clampin qui continue à voter alors que c\'est fini !')
         }
     }
 
