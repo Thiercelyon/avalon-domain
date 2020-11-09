@@ -1,32 +1,32 @@
 import {Message, TextChannel, User} from 'discord.js'
 import * as _ from 'lodash'
-import {Quest} from '../domain/quest'
-import {Role} from '../domain/roles'
+import Quest from '../entities/quest'
+import Role from '../entities/role'
 import {client} from '../index'
 
 const roles: Role[] = [
-    Role.SIMPLE_VASSAL,
-    Role.SIMPLE_VASSAL,
-    Role.SIMPLE_VASSAL,
+    Role.LOYAL_SERVANT,
+    Role.LOYAL_SERVANT,
+    Role.LOYAL_SERVANT,
     Role.MERLIN,
-    Role.LANCELOT_GENTIL,
-    Role.LANCELOT_MECHANT,
+    Role.GOOD_LANCELOT,
+    Role.EVIL_LANCELOT,
     Role.MORDRED,
-    Role.MORGANE,
-    Role.PERCEVAL,
-    Role.OBEYRON,
+    Role.MORGANA,
+    Role.PERCIVAL,
+    Role.OBERON,
 ]
 
 export default class RoleAssignmentBot {
     private players: Map<Role, User[]> = new Map<Role, User[]>([
-        [Role.SIMPLE_VASSAL, []],
-        [Role.LANCELOT_GENTIL, []],
+        [Role.LOYAL_SERVANT, []],
+        [Role.GOOD_LANCELOT, []],
         [Role.MERLIN, []],
-        [Role.PERCEVAL, []],
+        [Role.PERCIVAL, []],
         [Role.MORDRED, []],
-        [Role.MORGANE, []],
-        [Role.OBEYRON, []],
-        [Role.LANCELOT_MECHANT, []],
+        [Role.MORGANA, []],
+        [Role.OBERON, []],
+        [Role.EVIL_LANCELOT, []],
     ])
     private roles: Role[] = []
     private quest: Quest[] = []
@@ -53,14 +53,14 @@ export default class RoleAssignmentBot {
         this.mainChannel = channel as TextChannel
         this.roles = []
         this.players = new Map<Role, User[]>([
-            [Role.SIMPLE_VASSAL, []],
-            [Role.LANCELOT_GENTIL, []],
+            [Role.LOYAL_SERVANT, []],
+            [Role.GOOD_LANCELOT, []],
             [Role.MERLIN, []],
-            [Role.PERCEVAL, []],
+            [Role.PERCIVAL, []],
             [Role.MORDRED, []],
-            [Role.MORGANE, []],
-            [Role.OBEYRON, []],
-            [Role.LANCELOT_MECHANT, []],
+            [Role.MORGANA, []],
+            [Role.OBERON, []],
+            [Role.EVIL_LANCELOT, []],
         ])
         roles.forEach(r => this.roles.push(r))
         this.shuffle(this.roles)
@@ -80,14 +80,14 @@ export default class RoleAssignmentBot {
 
     cheat = ({channel}: Message) =>
         channel.send(`
-    Vassaux : ${this.players.get(Role.SIMPLE_VASSAL)},
+    Vassaux : ${this.players.get(Role.LOYAL_SERVANT)},
     Merlin : ${this.players.get(Role.MERLIN)},
-    Lancelot gentil : ${this.players.get(Role.LANCELOT_GENTIL)},
-    Lancelot méchant : ${this.players.get(Role.LANCELOT_MECHANT)},
-    Perceval : ${this.players.get(Role.PERCEVAL)},
+    Lancelot gentil : ${this.players.get(Role.GOOD_LANCELOT)},
+    Lancelot méchant : ${this.players.get(Role.EVIL_LANCELOT)},
+    Perceval : ${this.players.get(Role.PERCIVAL)},
     Mordred : ${this.players.get(Role.MORDRED)},
-    Morgane : ${this.players.get(Role.MORGANE)},
-    Obeyron : ${this.players.get(Role.OBEYRON)},
+    Morgane : ${this.players.get(Role.MORGANA)},
+    Obeyron : ${this.players.get(Role.OBERON)},
     `)
 
     night_phase = () => {
@@ -96,8 +96,8 @@ export default class RoleAssignmentBot {
         this.lancelot_m()
         this.perceval()
         this.mechants(Role.MORDRED)
-        this.mechants(Role.MORGANE)
-        this.mechants(Role.LANCELOT_MECHANT)
+        this.mechants(Role.MORGANA)
+        this.mechants(Role.EVIL_LANCELOT)
     }
 
     merlin = () =>
@@ -105,34 +105,34 @@ export default class RoleAssignmentBot {
             .get(Role.MERLIN)[0]
             .send(
                 `Voici les méchants : ${[
-                    this.players.get(Role.MORGANE),
-                    this.players.get(Role.LANCELOT_MECHANT),
-                    this.players.get(Role.OBEYRON),
+                    this.players.get(Role.MORGANA),
+                    this.players.get(Role.EVIL_LANCELOT),
+                    this.players.get(Role.OBERON),
                 ]}`
             )
 
     perceval = () =>
         this.players
-            .get(Role.PERCEVAL)[0]
+            .get(Role.PERCIVAL)[0]
             .send(
                 `Voici Morgane et Merlin : ${[
-                    this.players.get(Role.MORGANE),
+                    this.players.get(Role.MORGANA),
                     this.players.get(Role.MERLIN),
                 ]}`
             )
 
     lancelot_g = () =>
         this.players
-            .get(Role.LANCELOT_GENTIL)[0]
+            .get(Role.GOOD_LANCELOT)[0]
             .send(
-                `Voici ton antagoniste : ${[this.players.get(Role.LANCELOT_MECHANT)]}`
+                `Voici ton antagoniste : ${[this.players.get(Role.EVIL_LANCELOT)]}`
             )
 
     lancelot_m = () =>
         this.players
-            .get(Role.LANCELOT_MECHANT)[0]
+            .get(Role.EVIL_LANCELOT)[0]
             .send(
-                `Voici ton antagoniste : ${[this.players.get(Role.LANCELOT_GENTIL)]}`
+                `Voici ton antagoniste : ${[this.players.get(Role.GOOD_LANCELOT)]}`
             )
 
     mechants = (role: Role) =>
@@ -141,13 +141,13 @@ export default class RoleAssignmentBot {
             .send(
                 `Voici l'équipe de bad guys : ${[
                     this.players.get(Role.MORDRED),
-                    this.players.get(Role.MORGANE),
-                    this.players.get(Role.LANCELOT_MECHANT),
+                    this.players.get(Role.MORGANA),
+                    this.players.get(Role.EVIL_LANCELOT),
                 ]}`
             )
 
     initQuest = ({channel}: Message, ...playerIds: string[]) => {
-        if(_.uniq(playerIds).length !== playerIds.length)
+        if (_.uniq(playerIds).length !== playerIds.length)
             throw Error('ERREUR: Chaque joueur ne peut être présent qu\'une fois dans la quête !')
         let players: User[] = playerIds
             .map((playerId: string) => {
