@@ -1,6 +1,6 @@
 import {Message, TextChannel, User} from 'discord.js'
 import * as _ from 'lodash'
-import Quest from '../entities/quest'
+import QuestStatus from '../entities/quest'
 import Role from '../entities/role'
 import {client} from '../index'
 
@@ -29,7 +29,7 @@ export default class RoleAssignmentBot {
         [Role.EVIL_LANCELOT, []],
     ])
     private roles: Role[] = []
-    private quest: Quest[] = []
+    private quest: QuestStatus[] = []
     private questMembers: User[] = []
     private mainChannel: TextChannel
 
@@ -163,8 +163,8 @@ export default class RoleAssignmentBot {
         this.questMembers = players
     }
 
-    achieveQuest = ({author}: Message, quest: Quest) => {
-        if (!Object.keys(Quest).includes(quest)) {
+    achieveQuest = ({author}: Message, quest: QuestStatus) => {
+        if (!Object.keys(QuestStatus).includes(quest)) {
             throw Error('Merci de ne m\'envoyer que des valeurs valides: `!quest SUCCESS` ou `!quest FAIL`')
         }
         this.quest.push(quest)

@@ -1,12 +1,12 @@
 import {User} from 'discord.js'
-import Quest from '../entities/quest'
+import QuestStatus from '../entities/quest'
 import Role from '../entities/role'
 
 export type Players = Map<Role, User[]>
 
 export default class Game {
     players: Players = new Map()
-    quest: Quest[] = []
+    quest: QuestStatus[] = []
     quest_members: User[]
 
     constructor(notification_port?: NotificationPort, ...roles: Role[]) {

@@ -1,6 +1,9 @@
-enum Quest {
+/**
+ * Representation of the status of a quest.
+ */
+enum QuestStatus {
   SUCCESS = 'Succès',
   FAIL = 'Echec',
 }
 
-export default Quest
+export default QuestStatus

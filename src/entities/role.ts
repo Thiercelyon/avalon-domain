@@ -1,3 +1,6 @@
+/**
+ * Representation of a Character's role.
+ */
 enum Role {
     MERLIN = 'Merlin',
     PERCIVAL = 'Perceval',
