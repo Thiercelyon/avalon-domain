@@ -1,24 +1,17 @@
 import {User} from 'discord.js'
 import QuestStatus from '../entities/quest'
 import Role from '../entities/role'
-
-export type Players = Map<Role, User[]>
+import Players from './Players'
 
 export default class Game {
-    players: Players = new Map()
+    players: Players = new Players()
     quest: QuestStatus[] = []
-    quest_members: User[]
+    quest_members: User[] = []
 
     constructor(notification_port?: NotificationPort, ...roles: Role[]) {
-        this.players = !!roles ?
-        roles.reduce((acc, role) => acc.set(role, []), new Map<Role, User[]>())
-        : this.players = new Map<Role, User[]>()
+        this.players = new Players(...roles)
         notification_port?.notify_game_created(this.players)
     }
-
-    add_roles = (...roles: Role[]) => roles.forEach(role => this.players.set(role, []))
-    remove_roles = (...roles: Role[]) => roles.forEach(role => this.players.delete(role))
-
 
 }
 
