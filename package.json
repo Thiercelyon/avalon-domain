@@ -1,5 +1,5 @@
 {
-  "name": "@thiercelyon/avalon-domain",
+  "name": "@brain-academy/avalon-domain",
   "version": "0.0.1",
   "description": "Module containing the domain logic for the Avalon game.",
   "main": "build/src/index.js",
@@ -16,12 +16,12 @@
     "prepare": "npm run compile"
   },
   "publishConfig": {
-      "registry": "https://npm.pkg.github.com/thiercelyon"
+      "registry": "https://npm.pkg.github.com/brain-academy"
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@github.com:thiercelyon/avalon-domain.git",
-    "directory": "@thiercelyon/avalon-domain"
+    "url": "ssh://git@github.com:brain-academy/avalon-domain.git",
+    "directory": "@brain-academy/avalon-domain"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
